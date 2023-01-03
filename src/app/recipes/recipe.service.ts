@@ -9,7 +9,6 @@ export class RecipeService {
 
     private recipes: Recipe[]= [
         new Recipe(
-          1,
           'test recipe1',
           'test description1',
           'https://images.immediate.co.uk/production/volatile/sites/30/2013/05/Puttanesca-fd5810c.jpg',
@@ -19,7 +18,6 @@ export class RecipeService {
         ]
         ),
         new Recipe(
-          2,
           'test recipe2',
           'test description2',
           'https://images.immediate.co.uk/production/volatile/sites/30/2013/05/Puttanesca-fd5810c.jpg',

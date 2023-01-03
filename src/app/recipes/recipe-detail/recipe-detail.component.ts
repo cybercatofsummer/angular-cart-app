@@ -28,12 +28,16 @@ export class RecipeDetailComponent implements OnInit {
     this.route.params
     .subscribe(
       (params: Params) => {
-        this.recipeId = +params.id - 1;
+        this.recipeId = +params.id;
       }
     )
   }
 
   toShoppingList() {
     this.shoppingListService.addIngregient(this.recipe.ingredients);
+  }
+
+  onEditRecipe() {
+    this.router.navigate(['edit'], {relativeTo: this.route})
   }
 }

@@ -1,3 +1,5 @@
+import { AuthGuard } from './auth/auth.guard';
+import { AuthComponent } from './auth/auth.component';
 import { RecipesResolverService } from './recipes/recipes-resolver.service';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
@@ -10,13 +12,16 @@ import { RecipesComponent } from './recipes/recipes.component';
 
 const appRoutes: Routes = [
     { path: '', redirectTo: '/recipes', pathMatch: 'full'},
-    { path: 'recipes', component: RecipesComponent, children: [
+    { path: 'recipes', component: RecipesComponent,
+    canActivate: [AuthGuard],
+     children: [
         { path: '', component: RecipeStartComponent },
         { path: 'new', component: RecipeEditComponent, resolve: [RecipesResolverService] },
         { path: ':id', component: RecipeDetailComponent, resolve: [RecipesResolverService] },
         { path: ':id/edit', component: RecipeEditComponent, resolve: [RecipesResolverService] },
     ] },
     { path: 'shopping-list', component: ShoppingListComponent },
+    { path:'auth', component: AuthComponent },
     { path: 'not-found', component: ErrorPageComponent, data: {message: 'Page not found!'} },
     { path: '**', redirectTo: '/not-found' } // must be last
   ];

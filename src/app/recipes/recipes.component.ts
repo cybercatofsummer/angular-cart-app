@@ -10,7 +10,7 @@ export class RecipesComponent implements OnInit, OnDestroy {
   constructor(private dataStorage: DataStorageService) {}
 
   ngOnInit() {
-    this.dataStorage.fetchRecipes().subscribe();
+    //this.dataStorage.fetchRecipes().subscribe();
   }
 
   ngOnDestroy(): void {

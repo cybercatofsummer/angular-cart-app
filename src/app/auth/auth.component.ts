@@ -1,17 +1,23 @@
+import { PlaceholderDirective } from './../shared/placeholder/placeholder.directive';
+import { AlertComponent } from './../shared/alert/alert.component';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AuthService, AuthResponseData } from './auth.service';
 import { NgForm } from '@angular/forms';
-import { Component } from '@angular/core';
-
+import { Component, ViewChild, OnDestroy } from '@angular/core';
 @Component({
     selector: 'app-auth',
     templateUrl: './auth.component.html'
 })
-export class AuthComponent {
+export class AuthComponent implements OnDestroy {
     isLoginMode = true;
     isLoading = false;
     error: string;
+
+    @ViewChild(PlaceholderDirective, { static: false })
+    alertHost: PlaceholderDirective;
+
+    private closeSub: Subscription;
 
     constructor(
         private authService: AuthService,
@@ -20,6 +26,12 @@ export class AuthComponent {
 
     onSwitchMode() {
         this.isLoginMode = !this.isLoginMode;
+    }
+
+    ngOnDestroy(): void {
+        if (this.closeSub) {
+            this.closeSub.unsubscribe();
+        }
     }
 
     onSubmit(form: NgForm) {
@@ -45,10 +57,30 @@ export class AuthComponent {
             error => {
                 console.log(error);
                 this.error = error;
+                this.showErrorAlert(error);
                 this.isLoading = false;
             }
         )
 
         form.reset();
+    }
+
+    onHandleError() {
+        this.error = null;
+    }
+
+    private showErrorAlert(errorMessage: string) {
+        const hostViewContainerRef = this.alertHost.viewContainerRef;
+        hostViewContainerRef.clear();
+
+        const cpmRef = hostViewContainerRef.createComponent(AlertComponent)
+
+        cpmRef.instance.message = errorMessage;
+
+        this.closeSub = cpmRef.instance.close.subscribe(() => {
+            this.closeSub.unsubscribe();
+            hostViewContainerRef.clear();
+        });
+
     }
 }

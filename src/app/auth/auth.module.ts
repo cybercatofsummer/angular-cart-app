@@ -10,7 +10,7 @@ import { NgModule } from '@angular/core';
         SharedModule, 
         FormsModule,
         RouterModule.forChild([
-            { path:'auth', component: AuthComponent },
+            { path:'', component: AuthComponent },
         ])
     ]
 })

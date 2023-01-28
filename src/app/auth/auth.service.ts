@@ -1,8 +1,9 @@
+import { environment } from './../../environments/environment';
 import { Router } from '@angular/router';
 import { User } from './user.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, throwError, Subject, tap, BehaviorSubject } from 'rxjs';
+import { catchError, throwError, tap, BehaviorSubject } from 'rxjs';
 
 interface AuthResponse {
     kind: string;
@@ -30,7 +31,7 @@ export class AuthService {
 
     private tokenExpirationTime: any;
 
-    private API_KEY = 'API_KEY';
+    private API_KEY = environment.firebaseApiKey;
 
     private AUTH_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.API_KEY}`;
 

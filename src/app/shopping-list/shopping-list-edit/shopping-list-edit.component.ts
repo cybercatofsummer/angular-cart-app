@@ -1,3 +1,5 @@
+import { AddIngredient } from './../store/shopping-list.actions';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { Ingredient } from './../ingredient.model';
 import { ShoppingListService } from './../shopping-list.service';
@@ -19,7 +21,10 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   editedItemIndex: number;
   editedItem: Ingredient;
 
-  constructor(private shoppingListService: ShoppingListService) {}
+  constructor(
+    private shoppingListService: ShoppingListService,
+    private store: Store<{ shoppingList: { ingredienst: Ingredient[] } }>
+  ) {}
 
   ngOnInit() {
     this.subscription = this.shoppingListService.startedEditing.subscribe(
@@ -42,9 +47,10 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   onAddItem() {
     const value = this.slForm.value;
     const newIngredient = new Ingredient(value.name, value.amount);
-    this.shoppingListService.addIngregient(
-      [newIngredient]
-    ); 
+    // this.shoppingListService.addIngregient(
+    //   [newIngredient]
+    // );
+    this.store.dispatch(new AddIngredient(newIngredient))
     this.slForm.reset();
   }
 
@@ -52,7 +58,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     const value = this.slForm.value;
     const newIngredient = new Ingredient(value.name, value.amount);
     this.shoppingListService.updateIngredient(
-      this.editedItemIndex ,newIngredient
+      this.editedItemIndex, newIngredient
     );
     this.onClear();
   }

@@ -1,13 +1,18 @@
+import { AddIngredients } from './../shopping-list/store/shopping-list.actions';
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { Ingredient } from '../shopping-list/ingredient.model';
 import { Recipe } from './recipe.model';
 
-
+@Injectable({providedIn: 'root'})
 export class RecipeService {
 
   recipeChanges = new Subject<Recipe[]>();
 
   private recipes: Recipe[] = [];
+
+  constructor(private store: Store<{shoppingList: { ingredients: Ingredient[] } }>) {}
 
   getRecipes() {
     return this.recipes.slice();
@@ -35,5 +40,11 @@ export class RecipeService {
   deleteRecipe(index: number) {
     this.recipes.splice(index, 1);
     this.recipeChanges.next(this.recipes.slice());
+  }
+
+  addIngredients(ingredients: Ingredient[]) {
+    // this is something I missed during angular course ??
+
+    this.store.dispatch(new AddIngredients(ingredients));
   }
 }

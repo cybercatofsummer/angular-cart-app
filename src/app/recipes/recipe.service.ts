@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { Ingredient } from '../shopping-list/ingredient.model';
 import { Recipe } from './recipe.model';
+import { AppState } from '../shopping-list/store/shopping-lits.reducer';
 
 @Injectable({providedIn: 'root'})
 export class RecipeService {
@@ -12,7 +13,7 @@ export class RecipeService {
 
   private recipes: Recipe[] = [];
 
-  constructor(private store: Store<{shoppingList: { ingredients: Ingredient[] } }>) {}
+  constructor(private store: Store<AppState>) {}
 
   getRecipes() {
     return this.recipes.slice();

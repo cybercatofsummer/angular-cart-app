@@ -20,22 +20,15 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   editMode: boolean = false;
   editedItem: Ingredient;
 
-  constructor(
-    private store: Store<AppState>
-  ) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
     this.subscription = this.store.select('shoppingList').subscribe(state => {
-      if (state.editedIngredientIndex > -1) {
-        this.editMode = true;
-        this.editedItem = state.editedIngredient;
+      this.editMode = state.editedIngredientIndex > -1;
 
-        this.slForm.setValue({
-          name: this.editedItem.name,
-          amount: this.editedItem.amount
-        });
-      } else {
-        this.editMode = false;
+      if (this.editMode) {
+        this.editedItem = state.editedIngredient;
+        this.slForm.setValue(new Ingredient(this.editedItem.name, this.editedItem.amount));
       }
     });
   }
@@ -45,28 +38,23 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
       this.store.dispatch(new StopEdit());
   }
 
-  onAddItem() {
+  get newIngredient() {
     const value = this.slForm.value;
-    const newIngredient = new Ingredient(value.name, value.amount);
+    return new Ingredient(value.name, value.amount); 
+  }
 
-    this.store.dispatch(new AddIngredient(newIngredient))
+  onAddItem() {
+    this.store.dispatch(new AddIngredient(this.newIngredient));
     this.slForm.reset();
   }
 
   onUpdateItem() {
-    const value = this.slForm.value;
-    const newIngredient = new Ingredient(value.name, value.amount);
-    
-    this.store.dispatch(new UpdateIngredient(newIngredient));
+    this.store.dispatch(new UpdateIngredient(this.newIngredient));
     this.onClear();
   }
 
   onDelete() {
-    if (this.editMode) {
-      this.store.dispatch(new DeleteIngredient())
-    } else {
-      this.store.dispatch(new DeleteIngredients())
-    }
+    this.store.dispatch(this.editMode ? new DeleteIngredient() : new DeleteIngredients());
     this.onClear();
   }
 

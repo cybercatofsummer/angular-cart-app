@@ -1,10 +1,10 @@
+import { AppState } from './../store/app.reducer';
 import { AddIngredients } from './../shopping-list/store/shopping-list.actions';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { Ingredient } from '../shopping-list/ingredient.model';
 import { Recipe } from './recipe.model';
-import { AppState } from '../shopping-list/store/shopping-lits.reducer';
 
 @Injectable({providedIn: 'root'})
 export class RecipeService {

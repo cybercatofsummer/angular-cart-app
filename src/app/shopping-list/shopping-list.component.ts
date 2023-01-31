@@ -3,7 +3,7 @@ import { Ingredient } from './ingredient.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { AppState } from './store/shopping-lits.reducer';
+import { AppState } from '../store/app.reducer';
 
 @Component({
   selector: 'app-shopping-list',

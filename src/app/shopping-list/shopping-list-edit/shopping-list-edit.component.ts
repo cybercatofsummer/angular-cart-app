@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { Ingredient } from './../ingredient.model';
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AppState } from '../store/shopping-lits.reducer';
+import { AppState } from 'src/app/store/app.reducer';
 
 @Component({
   selector: 'app-shopping-list-edit',

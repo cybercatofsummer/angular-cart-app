@@ -4,6 +4,9 @@ import { User } from './user.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, throwError, tap, BehaviorSubject } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState } from '../store/app.reducer';
+import { Login, Logout } from './store/auth.actions';
 
 interface AuthResponse {
     kind: string;
@@ -26,7 +29,7 @@ export interface AuthResponseData {
 @Injectable({providedIn: 'root'})
 export class AuthService {
 
-    user = new BehaviorSubject<User>(null);
+    //user = new BehaviorSubject<User>(null);
     token: string = null;
 
     private tokenExpirationTime: any;
@@ -38,7 +41,8 @@ export class AuthService {
     private LOGIN_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.API_KEY}`;
     constructor(
         private http: HttpClient,
-        private router: Router
+        private router: Router,
+        private store: Store<AppState>,
     ) {}
 
     signup(email: string, password: string) {
@@ -71,7 +75,8 @@ export class AuthService {
     }
 
     logout() {
-        this.user.next(null);
+        //this.user.next(null);
+        this.store.dispatch(new Logout());
         this.router.navigate(['/auth']);
         localStorage.removeItem('userData');
         if (this.tokenExpirationTime) {
@@ -99,7 +104,13 @@ export class AuthService {
         );
 
         if (localUser.token) {
-            this.user.next(localUser);
+            //this.user.next(localUser);
+            this.store.dispatch(new Login({
+                email: localUser.email,
+                userId: localUser.id,
+                token: localUser.token,
+                expirationDate: new Date(userData._tokenExpirationDate)
+            }));
             const time = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime();
             this.autoLogout(time);
         }
@@ -113,7 +124,15 @@ export class AuthService {
         //get milliseconds
         const expirationDate = new Date(new Date().getTime() + resdata.expiresIn * 1000);
         const user = new User(resdata.email, resdata.localId, resdata.idToken, expirationDate);
-        this.user.next(user);  
+        //this.user.next(user); 
+
+        this.store.dispatch(new Login({
+            email: user.email,
+            userId: user.id,
+            token: user.token,
+            expirationDate: expirationDate
+        }));
+
         this.autoLogout(resdata.expiresIn * 1000);
         localStorage.setItem('userData', JSON.stringify(user));
     }

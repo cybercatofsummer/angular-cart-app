@@ -35,10 +35,9 @@ export class AuthService {
     private tokenExpirationTime: any;
 
     private API_KEY = environment.firebaseApiKey;
-
     private AUTH_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.API_KEY}`;
-
     private LOGIN_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.API_KEY}`;
+    
     constructor(
         private http: HttpClient,
         private router: Router,
@@ -155,6 +154,6 @@ export class AuthService {
                 break;
         }
 
-        return throwError(errorMessage)
+        return throwError(errorMessage);
     }
 }

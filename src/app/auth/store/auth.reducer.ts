@@ -1,13 +1,17 @@
 import { User } from "../user.model";
-import { AuthActions, LOGIN, LOGOUT } from "./auth.actions";
+import { AuthActions, LOGIN, LOGIN_FAIL, LOGIN_START, LOGOUT } from "./auth.actions";
 
 
 export interface State {
     user: User;
+    authError: string;
+    loading: boolean;
 }
 
 const initialState: State = {
-    user: null
+    user: null,
+    authError: null,
+    loading: false
 };
 
 export function authReducer(state = initialState, action: AuthActions) {
@@ -19,9 +23,19 @@ export function authReducer(state = initialState, action: AuthActions) {
                 action.payload.token,
                 action.payload.expirationDate
             );
-            return { ...state, user: user };
+            return { ...state, user: user, loading: false };
         case LOGOUT:
-            return { ...state, user: null };
+            return { ...state, user: null, loading: true };
+        case LOGIN_START:
+            return { ...state, authError: null };
+        case LOGIN_FAIL:
+            return { 
+                ...state, 
+                user: null, 
+                authError: action.payload ,
+                loading: false
+            };
+            
 
         default: 
             return state;

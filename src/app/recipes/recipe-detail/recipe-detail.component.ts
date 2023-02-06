@@ -1,6 +1,5 @@
 import { DeleteRecipe } from './../store/recipe.actions';
-import { switchMap } from 'rxjs';
-import { map } from 'rxjs';
+import { switchMap, map } from 'rxjs';
 import { AppState } from './../../store/app.reducer';
 import { AddIngredients } from './../../shopping-list/store/shopping-list.actions';
 import { ActivatedRoute, Router } from '@angular/router';
